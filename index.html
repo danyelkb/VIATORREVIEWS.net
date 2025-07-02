@@ -1,1 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Review Your Viator Tour</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html { height: 100%; font-family: 'Open Sans', sans-serif; }
+    body { background: #f7f7f7; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .container { background: #fff; width: 100%; max-width: 360px; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+    .header { background: #FF8000; color: #fff; text-align: center; padding: 1.2rem; position: relative; }
+    .header img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 0.5rem; }
+    .header h1 { font-size: 1.3rem; font-weight: 600; }
+    .powered { font-size: 0.75rem; opacity: 0.8; margin-top: 0.25rem; }
+    .step { padding: 1rem; text-align: center; }
+    .step h2 { font-size: 1.1rem; color: #333; margin-bottom: 0.5rem; font-weight: 600; }
+    .stars { display: flex; justify-content: center; gap: 0.25rem; font-size: 2.4rem; margin: 0.5rem 0 1rem; }
+    .star { color: #ccc; cursor: pointer; transition: color 0.2s, transform 0.2s; }
+    .star:hover { transform: scale(1.2); }
+    .star.selected, .star.hovered { color: #FF8000; }
+    textarea { width: 100%; padding: 0.75rem; border: 1px solid #d8d8d8; border-radius: 4px; font-size: 0.9rem; resize: vertical; margin-bottom: 1rem; }
+    .btn { display: block; width: 100%; padding: 0.75rem; font-size: 1rem; font-weight: 600; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; text-align: center; }
+    .btn-primary { background: #FF8000; color: #fff; transition: background 0.2s; }
+    .btn-primary:hover { background: #e67300; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <img src="https://www.viator.com/static/vt/images/icons/viator-logo-white.svg" alt="Viator Logo" />
+      <h1>Review Your Viator Tour</h1>
+      <div class="powered">Powered by Viator Reviews</div>
+    </div>
 
+    <!-- Rating Step -->
+    <div id="rating-step" class="step">
+      <h2>How was your experience?</h2>
+      <div class="stars" id="stars">
+        <span class="star" data-value="1">★</span>
+        <span class="star" data-value="2">★</span>
+        <span class="star" data-value="3">★</span>
+        <span class="star" data-value="4">★</span>
+        <span class="star" data-value="5">★</span>
+      </div>
+    </div>
+
+    <!-- 5-Star CTA -->
+    <div id="five-star-step" class="step" hidden>
+      <h2>Awesome!</h2>
+      <p>We're thrilled you loved your tour! Please leave us a 5★ review on Viator:</p>
+      <!-- Replace the URL below with your actual Viator review page -->
+      <a href="https://www.tripadvisor.com/UserReviewEdit-g187147-d32960747-Eiffel_Tower_Small_Group_Access_up_to_2nd_Floor_Summit_Option-Paris_Ile_de_France.html" class="btn btn-primary" target="_blank">Leave a 5★ Review on Viator</a>
+    </div>
+
+    <!-- Feedback Step -->
+    <div id="feedback-step" class="step" hidden>
+      <h2>We Value Your Feedback</h2>
+      <p>Please let us know how we can improve:</p>
+      <textarea id="feedback" placeholder="Your feedback..."></textarea>
+      <button id="submit-feedback" class="btn btn-primary">Submit Feedback</button>
+    </div>
+  </div>
+
+  <script>
+    const stars = document.querySelectorAll('.star');
+    const ratingStep = document.getElementById('rating-step');
+    const fiveStarStep = document.getElementById('five-star-step');
+    const feedbackStep = document.getElementById('feedback-step');
+    let selectedRating = 0;
+
+    stars.forEach(star => {
+      star.onmouseover = () => highlight(star.dataset.value);
+      star.onmouseout = () => highlight(selectedRating);
+      star.onclick = () => {
+        selectedRating = star.dataset.value;
+        highlight(selectedRating);
+        ratingStep.hidden = true;
+        if (selectedRating == 5) {
+          fiveStarStep.hidden = false;
+        } else {
+          feedbackStep.hidden = false;
+        }
+      };
+    });
+
+    function highlight(r) {
+      stars.forEach(s => s.classList.toggle('hovered', s.dataset.value <= r));
+    }
+
+    document.getElementById('submit-feedback').onclick = () => {
+      const msg = encodeURIComponent(document.getElementById('feedback').value.trim());
+      window.location.href = `mailto:your-email@danistour.com?subject=Viator Tour Feedback - ${selectedRating}★&body=${msg}`;
+    };
+  </script>
+</body>
+</html>
